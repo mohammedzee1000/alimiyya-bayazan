@@ -39,16 +39,15 @@ echo "=========================================="
 generate_volume() {
     local start=$1
     local end=$2
-    local output=$3
+    local output="$3.docx"
 
     echo -n "👉 Generating $output ($start-$end)... "
-    
-    # Run command and hide output unless it fails
+
     if $PY_CMD "$SCRIPT_NAME" --start "$start" --end "$end" -o "$output" > /dev/null 2>&1; then
         echo "✅ DONE"
     else
         echo "❌ FAILED"
-        echo "Error: Generation halted. Check logs or run manually to debug."
+        echo "Error: Check logs by running: $PY_CMD $SCRIPT_NAME --start $start --end $end -o $output"
         exit 1
     fi
 }
@@ -81,10 +80,10 @@ generate_volume 51 57 "Vol_20_Zariyat_to_Hadid"
 generate_volume 58 66 "Vol_21_Juz_28_Mujadila_to_Tahrim"
 generate_volume 67 77 "Vol_22_Juz_29_Mulk_to_Mursalat"
 
-# Juz 30 (Amma Para)
-generate_volume 78 85 "Vol_23_Juz_30_Part1"
-generate_volume 86 100 "Vol_24_Juz_30_Part2"
-generate_volume 101 114 "Vol_25_Juz_30_Part3"
+# Juz 30 (Amma Para) with Surah numbers in the name
+generate_volume 78 85 "Vol_23_Juz_30_Surah_78_to_85"
+generate_volume 86 100 "Vol_24_Juz_30_Surah_86_to_100"
+generate_volume 101 114 "Vol_25_Juz_30_Surah_101_to_114"
 
 echo "=========================================="
 echo "✨ All 25 volumes generated successfully!"
