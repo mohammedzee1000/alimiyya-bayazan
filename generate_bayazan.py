@@ -9,7 +9,7 @@ from docx.oxml.ns import qn, nsdecls
 from docx.oxml import OxmlElement, parse_xml
 
 # --- CONFIGURATION ---
-INPUT_FILE = "quran-simple.txt"
+INPUT_FILE = "sources/text/quran-simple.txt"
 ARABIC_FONT = "KFGQPC Nastaleeq" 
 
 def set_arabic_font(run, size):
