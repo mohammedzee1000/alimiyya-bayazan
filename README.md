@@ -2,6 +2,10 @@
 
 A Python-based tool for generating comprehensive Quranic study workbooks (Bayazan) designed for Alimiyya Islamic education courses. The system creates beautifully formatted Microsoft Word documents with word-by-word Arabic analysis, morphological data, and space for student notes.
 
+> **📦 Using Pre-Generated Workbooks?** If you downloaded release artifacts (`.tar.gz` or `.zip` files), please refer to:
+> - [`USAGE_INSTRUCTIONS.md`](USAGE_INSTRUCTIONS.md) included in your downloaded archive, OR
+> - [View online in the repository](https://github.com/mohammedzee1000/alimiyya-bayazan/blob/main/USAGE_INSTRUCTIONS.md)
+
 ## 🌟 Features
 
 - **Word-by-Word Analysis**: Each Quranic word presented in structured table format
@@ -56,6 +60,27 @@ A Python-based tool for generating comprehensive Quranic study workbooks (Bayaza
 - **Python**: 3.7 or higher
 - **Operating System**: macOS, Linux, or Windows
 - **Microsoft Word**: For viewing and editing generated documents
+
+## ⚠️ Important: Font Installation Required
+
+**The generated workbooks require specific Arabic fonts to display correctly.** Without installing these fonts, the Arabic text will appear in a generic font (Arial/Times New Roman) instead of the beautiful Indo-Pak Nastaleeq or Uthmani scripts.
+
+### Installing Fonts:
+
+1. **Locate the font file** in the `generated/` directory:
+   - Indo-Pak mode: `AlQuran IndoPak by QuranWBW.ttf`
+   - Uthmani mode: `KFGQPCNastaleeq-Regular.ttf`
+
+2. **Install the font**:
+   - **Windows**: Right-click the `.ttf` file → "Install"
+   - **macOS**: Double-click the `.ttf` file → Click "Install Font"
+   - **Linux**: Copy to `~/.fonts/` or `/usr/share/fonts/` then run `fc-cache -f -v`
+
+3. **Restart Microsoft Word** after installation
+
+4. **Reopen the workbook** - Arabic text should now display in the correct script
+
+**Note**: Font files are automatically included in all generated archives and the `generated/` directory.
 
 ## 🚀 Quick Start
 

@@ -53,6 +53,18 @@ cleanup_generated() {
     echo ""
 }
 
+# Function to copy usage instructions
+copy_usage_instructions() {
+    echo "📄 Copying usage instructions..."
+    if [ -f "USAGE_INSTRUCTIONS.md" ]; then
+        cp USAGE_INSTRUCTIONS.md generated/
+        echo "✅ USAGE_INSTRUCTIONS.md copied"
+    else
+        echo "⚠️  Warning: USAGE_INSTRUCTIONS.md not found"
+    fi
+    echo ""
+}
+
 # Function to package artifacts
 package_artifacts() {
     local mode=$1
@@ -92,6 +104,8 @@ if [ $? -eq 0 ]; then
     echo "✅ Standard mode generation complete"
     echo ""
     
+    copy_usage_instructions
+    
     # Count generated files
     docx_count=$(ls -1 generated/*.docx 2>/dev/null | wc -l)
     echo "📊 Generated $docx_count workbook files"
@@ -119,6 +133,8 @@ if [ $? -eq 0 ]; then
     echo "✅ Pro Indo-Pak mode generation complete"
     echo ""
     
+    copy_usage_instructions
+    
     # Count generated files
     docx_count=$(ls -1 generated/*.docx 2>/dev/null | wc -l)
     echo "📊 Generated $docx_count workbook files"
@@ -145,6 +161,8 @@ bash gen_bayzan_all.sh --pro --theme=uthmani
 if [ $? -eq 0 ]; then
     echo "✅ Pro Uthmani mode generation complete"
     echo ""
+    
+    copy_usage_instructions
     
     # Count generated files
     docx_count=$(ls -1 generated/*.docx 2>/dev/null | wc -l)
