@@ -1,6 +1,6 @@
 # Data Sources Documentation
 
-This document tracks all data sources used in the Alimiyya Bayazan project, including exact download locations and versions.
+Complete reference for all data sources used in the Alimiyya Bayazan project.
 
 ## 📚 Shared Resources (All Themes)
 
@@ -19,7 +19,6 @@ This document tracks all data sources used in the Alimiyya Bayazan project, incl
 - **Type**: Morphological analysis (roots, lemmas, stems)
 - **Format**: SQLite databases
 - **Purpose**: Word-by-word grammatical analysis
-- **Note**: These databases enable tracing each Quranic word back to its classical Arabic root
 
 ### Leeds Morphology
 - **File**: `quranic-corpus-morphology-0.4.txt`
@@ -36,7 +35,6 @@ This document tracks all data sources used in the Alimiyya Bayazan project, incl
 - **Source**: [Tanzil.net](https://tanzil.net/download/)
 - **Type**: Simple Arabic text (no diacritics)
 - **Format**: Plain text
-- **Script**: Standard Arabic
 
 ### Font
 - **File**: `sources/standard/KFGQPCNastaleeq-Regular.ttf`
@@ -52,14 +50,12 @@ This document tracks all data sources used in the Alimiyya Bayazan project, incl
 - **Type**: Word-by-word database with Indo-Pak orthography
 - **Format**: SQLite database
 - **Script**: Indo-Pak Nastaleeq
-- **Version**: Check QUL website for latest version
 
 ### Font
 - **File**: `sources/themes/indopak/fonts/AlQuran IndoPak by QuranWBW.ttf`
 - **Source**: [QUL Tarteel - Indo-Pak Font](https://qul.tarteel.ai/resources/font/242)
 - **Type**: Indo-Pak Nastaleeq font
 - **Creator**: QuranWBW (Quran Word by Word)
-- **License**: Check QUL website for license terms
 
 ## 🎨 Theme: Uthmani
 
@@ -69,7 +65,6 @@ This document tracks all data sources used in the Alimiyya Bayazan project, incl
 - **Type**: Word-by-word database with Uthmani orthography
 - **Format**: SQLite database
 - **Script**: Uthmani (Hafs narration)
-- **Version**: Check QUL website for latest version
 
 ### Font
 - **File**: `sources/themes/uthmani/fonts/KFGQPC Uthmanic Script HAFS.otf`
@@ -78,14 +73,12 @@ This document tracks all data sources used in the Alimiyya Bayazan project, incl
 - **Type**: Uthmani script font (HAFS narration)
 - **Format**: OpenType Font (.otf)
 - **License**: Free for non-commercial use
-- **Status**: ✅ **INSTALLED AND CONFIGURED**
 
-## 📋 Database Schema Compatibility
+## 📋 Database Schema
 
 All word-by-word databases (Indo-Pak and Uthmani) from QUL Tarteel share the same schema:
 
 ```sql
--- Expected table structure
 CREATE TABLE words (
     surah INTEGER,
     ayah INTEGER,
@@ -101,31 +94,24 @@ This ensures compatibility across themes without code changes.
 
 When updating data sources:
 
-1. **Check for updates** on source websites
-2. **Download new versions** to a temporary location
-3. **Backup current files** before replacing
-4. **Test generation** with new files
-5. **Update this document** with new version info
-6. **Commit changes** with clear version notes
+1. Check for updates on source websites
+2. Download new versions to a temporary location
+3. Backup current files before replacing
+4. Test generation with new files
+5. Update this document with new version info
+6. Commit changes with clear version notes
 
-## ⚠️ To Do
-
-- [ ] **Version numbers**: Add version/date info for all resources when available
-- [ ] **License details**: Verify and document all licenses in detail
-- [ ] **Alternative sources**: Document backup download locations
-- [ ] **Update check dates**: Track when resources were last verified
-
-## 📞 Support & Questions
+## 📞 Support
 
 For questions about data sources:
-- **QUL Tarteel**: Check their website or contact through their platform
-- **Tanzil**: Visit [tanzil.net](https://tanzil.net/)
-- **Quranic Corpus**: Visit [corpus.quran.com](http://corpus.quran.com/)
-- **King Fahd Complex**: Visit [qurancomplex.gov.sa](https://qurancomplex.gov.sa/)
+- **QUL Tarteel**: [qul.tarteel.ai](https://qul.tarteel.ai/)
+- **Tanzil**: [tanzil.net](https://tanzil.net/)
+- **Quranic Corpus**: [corpus.quran.com](http://corpus.quran.com/)
+- **King Fahd Complex**: [qurancomplex.gov.sa](https://qurancomplex.gov.sa/)
 
 ## 🙏 Acknowledgments
 
-This project relies entirely on freely available, academically verified Islamic resources. We are deeply grateful to:
+This project relies entirely on freely available, academically verified Islamic resources. Deep gratitude to:
 - Tanzil.net team
 - Quranic Universal Library (QUL) / Tarteel.ai
 - University of Leeds Quranic Corpus team
@@ -135,4 +121,4 @@ This project relies entirely on freely available, academically verified Islamic 
 ---
 
 **Last Updated**: 2026-04-13  
-**Maintainer**: Please update this document when adding/changing data sources
+**Maintainer**: Update this document when adding/changing data sources

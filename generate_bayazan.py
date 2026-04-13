@@ -70,6 +70,11 @@ def add_table_of_contents(paragraph):
 def create_doc(start_surah, end_surah, output_filepath):
     doc = docx.Document()
     
+    # Set core document properties to ensure modern format
+    doc.core_properties.title = f"Alimiyya Bayazan - Surah {start_surah} to {end_surah}"
+    doc.core_properties.author = "Alimiyya Bayazan Generator"
+    doc.core_properties.comments = "Generated in Standard Mode"
+    
     # --- PAGE SETUP ---
     section = doc.sections[-1]
     section.orientation = WD_ORIENT.LANDSCAPE

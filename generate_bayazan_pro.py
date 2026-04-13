@@ -134,6 +134,12 @@ class BayazanProEngine:
 
     def create_workbook(self, start, end, output_filename):
         doc = Document()
+        
+        # Set core document properties to ensure modern format
+        doc.core_properties.title = f"Alimiyya Bayazan - Surah {start} to {end}"
+        doc.core_properties.author = "Alimiyya Bayazan Generator"
+        doc.core_properties.comments = f"Generated with theme: {self.theme_config['name']}"
+        
         section = doc.sections[0]
         section.orientation = WD_ORIENT.LANDSCAPE
         section.page_width, section.page_height = Inches(11.69), Inches(8.27)
@@ -157,6 +163,12 @@ class BayazanProEngine:
             h_ar.paragraph_format.rtl = True
             run_h = h_ar.add_run(f"سورة {s_info['arname']}")
             self.set_arabic_font(run_h, 36, color=(0, 51, 102))
+
+            # Surah-level notes section
+            p_intro = doc.add_paragraph("Surah Introduction & Key Themes:")
+            p_intro.runs[0].bold = True
+            p_intro.runs[0].font.color.rgb = RGBColor(0, 51, 102)
+            doc.add_paragraph("\n\n\n")  # Space for notes
 
             if s_num != 9 and s_num != 1:
                 p_bis = doc.add_paragraph()
