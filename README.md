@@ -14,6 +14,43 @@ A Python-based tool for generating comprehensive Quranic study workbooks (Bayaza
 - **Batch Processing**: Generate all 25 volumes covering the entire Quran with a single command
 - **Professional Typography**: Optimized Arabic fonts with full tashkeel support
 
+## 📸 Screenshots
+
+### Standard Mode
+<table>
+  <tr>
+    <td><img src="screenshots/standard/standard-cover.png" width="400"/><br/><b>Cover Page</b></td>
+    <td><img src="screenshots/standard/standard-toc.png" width="400"/><br/><b>Table of Contents</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/standard/standard-word-table.png" width="400"/><br/><b>Word Analysis Table</b></td>
+    <td><img src="screenshots/standard/standard-ayah-notes.png" width="400"/><br/><b>Ayah Notes Section</b></td>
+  </tr>
+</table>
+
+### Pro Indo-Pak Mode
+<table>
+  <tr>
+    <td><img src="screenshots/pro-indopak/pro-indopak-cover.png" width="400"/><br/><b>Cover Page</b></td>
+    <td><img src="screenshots/pro-indopak/pro-indopak-toc.png" width="400"/><br/><b>Table of Contents</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/pro-indopak/pro-indopak-word-table.png" width="400"/><br/><b>4-Column Analysis</b></td>
+    <td><img src="screenshots/pro-indopak/pro-indopak-surah-header.png" width="400"/><br/><b>Surah Header with Juz</b></td>
+  </tr>
+</table>
+
+### Pro Uthmani Mode
+<table>
+  <tr>
+    <td><img src="screenshots/pro-uthmani/pro-uthmani-cover.png" width="400"/><br/><b>Cover Page</b></td>
+    <td><img src="screenshots/pro-uthmani/pro-uthmani-toc.png" width="400"/><br/><b>Table of Contents</b></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="screenshots/pro-uthmani/pro-uthmani-word-table.png" width="400"/><br/><b>Uthmani Script Analysis</b></td>
+  </tr>
+</table>
+
 ## 📋 Prerequisites
 
 - **Python**: 3.7 or higher
