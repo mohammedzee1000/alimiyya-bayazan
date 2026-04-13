@@ -154,8 +154,10 @@ THEMES = {
 
 **Pro Academic Mode:**
 - 4-column table: Word | Root | Sarf | Notes
+- Dynamic Table of Contents
 - Color-coded grammatical categories
 - Juz indicators
+- Surah-level notes sections
 - Enhanced morphological data
 - Theme-specific fonts and scripts
 

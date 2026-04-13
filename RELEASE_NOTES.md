@@ -37,8 +37,10 @@ Each archive contains all 25 volumes covering the entire Quran, plus fonts and i
 
 - **Pro Academic Mode**: 4-column layout with advanced morphological features
   - 4-column tables: Word | Root | Sarf | Notes
+  - Dynamic Table of Contents with auto-generated index
   - Color-coded grammatical categories (Nouns: Blue, Verbs: Red, Particles: Grey)
   - Juz indicators for easy navigation
+  - Surah-level notes sections for comprehensive study
   - Enhanced morphological data from Quranic Corpus
 
 ### Theme Support (Pro Mode)
