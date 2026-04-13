@@ -32,11 +32,15 @@ In the extracted folder, you'll find one of these font files:
 2. Run: `fc-cache -f -v`
 3. Verify: `fc-list | grep -i quran`
 
-#### 3. Restart Microsoft Word
+#### 3. Close Microsoft Word
 
-**Important:** You must restart Word after installing fonts for changes to take effect.
+**Important:** If Microsoft Word is currently open, close it completely before proceeding.
 
-#### 4. Open the Workbooks
+#### 4. Restart Microsoft Word
+
+**Critical:** You must restart Word after installing fonts for the new fonts to load properly.
+
+#### 5. Open the Workbooks
 
 Now you can open any `.docx` file in the folder. The Arabic text should display in beautiful calligraphic script!
 

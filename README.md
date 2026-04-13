@@ -76,9 +76,11 @@ A Python-based tool for generating comprehensive Quranic study workbooks (Bayaza
    - **macOS**: Double-click the `.ttf` file → Click "Install Font"
    - **Linux**: Copy to `~/.fonts/` or `/usr/share/fonts/` then run `fc-cache -f -v`
 
-3. **Restart Microsoft Word** after installation
+3. **Close Microsoft Word completely** if it's currently open
 
-4. **Reopen the workbook** - Arabic text should now display in the correct script
+4. **Restart Microsoft Word** - This is critical for fonts to load properly
+
+5. **Reopen the workbook** - Arabic text should now display in the correct script
 
 **Note**: Font files are automatically included in all generated archives and the `generated/` directory.
 
