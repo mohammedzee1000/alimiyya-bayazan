@@ -68,8 +68,9 @@ A Python-based tool for generating comprehensive Quranic study workbooks (Bayaza
 ### Installing Fonts:
 
 1. **Locate the font file** in the `generated/` directory:
-   - Indo-Pak mode: `AlQuran IndoPak by QuranWBW.ttf`
-   - Uthmani mode: `KFGQPCNastaleeq-Regular.ttf`
+   - Standard mode: `AlQuran IndoPak by QuranWBW.ttf`
+   - Pro Indo-Pak mode: `AlQuran IndoPak by QuranWBW.ttf`
+   - Pro Uthmani mode: `KFGQPC Uthmanic Script HAFS.otf`
 
 2. **Install the font**:
    - **Windows**: Right-click the `.ttf` file → "Install"

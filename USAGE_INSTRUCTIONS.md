@@ -11,9 +11,9 @@ Thank you for downloading the Alimiyya Bayazan Quranic study workbooks! This gui
 #### 1. Locate the Font File
 
 In the extracted folder, you'll find one of these font files:
-- **Indo-Pak mode**: `AlQuran IndoPak by QuranWBW.ttf`
-- **Uthmani mode**: `KFGQPCNastaleeq-Regular.ttf`
 - **Standard mode**: `AlQuran IndoPak by QuranWBW.ttf`
+- **Pro Indo-Pak mode**: `AlQuran IndoPak by QuranWBW.ttf`
+- **Pro Uthmani mode**: `KFGQPC Uthmanic Script HAFS.otf`
 
 #### 2. Install the Font
 
