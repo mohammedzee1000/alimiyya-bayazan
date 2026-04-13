@@ -66,9 +66,16 @@ Download and install **KFGQPC Nastaleeq Regular** font from the King Fahd Comple
 python generate_bayazan.py --start 1 --end 2 -o "My_Workbook.docx"
 ```
 
-#### Pro Academic Mode (4-column with morphology)
+#### Pro Academic Mode (4-column with morphology and themes)
+
+**Indo-Pak Theme (Default):**
 ```bash
-python generate_bayazan_pro.py --start 78 --end 114 -o "Juz_30_Academic.docx"
+python generate_bayazan_pro.py --start 78 --end 114 --theme indopak -o "Juz_30_IndoPak.docx"
+```
+
+**Uthmani Theme (Placeholder - requires Uthmani resources):**
+```bash
+python generate_bayazan_pro.py --start 78 --end 114 --theme uthmani -o "Juz_30_Uthmani.docx"
 ```
 
 ### Generate All 25 Volumes
@@ -78,9 +85,18 @@ python generate_bayazan_pro.py --start 78 --end 114 -o "Juz_30_Academic.docx"
 bash gen_bayzan_all.sh
 ```
 
-#### Pro Academic Mode
+#### Pro Academic Mode (Default: Indo-Pak Theme)
 ```bash
 bash gen_bayzan_all.sh --pro
+```
+
+#### Pro Academic Mode with Specific Theme
+```bash
+# Indo-Pak theme (explicit)
+bash gen_bayzan_all.sh --pro --theme=indopak
+
+# Uthmani theme
+bash gen_bayzan_all.sh --pro --theme=uthmani
 ```
 
 This will generate 25 volumes covering:
@@ -91,96 +107,95 @@ This will generate 25 volumes covering:
 
 ### Command-Line Arguments
 
+#### Standard Mode (`generate_bayazan.py`)
 | Argument | Required | Description | Example |
 |----------|----------|-------------|---------|
 | `--start` | Yes | Starting Surah number (1-114) | `--start 1` |
 | `--end` | Yes | Ending Surah number (1-114) | `--end 114` |
 | `-o, --output` | No | Custom output filename | `-o "MyWorkbook.docx"` |
 
+#### Pro Academic Mode (`generate_bayazan_pro.py`)
+| Argument | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `--start` | Yes | Starting Surah number (1-114) | `--start 1` |
+| `--end` | Yes | Ending Surah number (1-114) | `--end 114` |
+| `--theme` | No | Theme: `indopak` or `uthmani` (default: `indopak`) | `--theme indopak` |
+| `-o, --output` | No | Custom output filename | `-o "MyWorkbook.docx"` |
+
+### Available Themes
+
+| Theme | Description | Status |
+|-------|-------------|--------|
+| **indopak** | Traditional Indo-Pak Nastaleeq script | ✅ Available |
+| **uthmani** | Classical Uthmani script | 🚧 Placeholder (requires resources) |
+
 ## 📁 Project Structure
 
 ```
 alimiyya-bayazan/
 ├── generate_bayazan.py          # Standard 2-column generator
-├── generate_bayazan_pro.py      # Pro 4-column generator with morphology
-├── config.py                    # Configuration (paths, colors, styles)
-├── gen_bayzan_all.sh           # Batch generation script
+├── generate_bayazan_pro.py      # Pro 4-column generator with theme support
+├── config.py                    # Configuration (paths, colors, styles, themes)
+├── gen_bayzan_all.sh           # Batch generation script with theme support
 ├── requirements.txt             # Python dependencies
 ├── setup_env.sh                # Environment setup helper
-├── sources/                    # Data sources (not in repo)
-│   ├── text/
-│   │   ├── quran-simple.txt    # Plain Arabic text (Tanzil)
-│   │   └── indopak-nastaleeq.db # Word-by-word database
-│   ├── metadata/
-│   │   └── quran-data.xml      # Surah metadata
-│   ├── morphology/
-│   │   ├── word-root.db        # Root mappings
-│   │   └── quranic-corpus-morphology-0.4.txt # Leeds morphology
-│   └── fonts/
-│       └── KFGQPCNastaleeq-Regular.ttf
+├── sources/                    # Data sources (organized by theme)
+│   ├── shared/                 # Shared resources across all themes
+│   │   ├── metadata/
+│   │   │   └── quran-data.xml      # Surah metadata (Tanzil)
+│   │   └── morphology/
+│   │       ├── word-root.db        # Root mappings (QUL)
+│   │       ├── word-lemma.db       # Lemma mappings (QUL)
+│   │       ├── word-stem.db        # Stem mappings (QUL)
+│   │       ├── ayah-root.db        # Ayah-level roots (QUL)
+│   │       ├── ayah-lemma.db       # Ayah-level lemmas (QUL)
+│   │       ├── ayah-stem.db        # Ayah-level stems (QUL)
+│   │       └── quranic-corpus-morphology-0.4.txt # Leeds morphology
+│   ├── themes/                 # Theme-specific resources
+│   │   ├── indopak/           # Indo-Pak Nastaleeq theme
+│   │   │   ├── text/
+│   │   │   │   └── indopak-nastaleeq.db # Indo-Pak word database
+│   │   │   └── fonts/
+│   │   │       └── AlQuran IndoPak by QuranWBW.ttf
+│   │   └── uthmani/           # Uthmani script theme (placeholder)
+│   │       ├── text/
+│   │       │   └── .gitkeep   # Add Uthmani database here
+│   │       └── fonts/
+│   │           └── .gitkeep   # Add Uthmani font here
+│   └── standard/              # Standard mode resources
+│       ├── KFGQPCNastaleeq-Regular.ttf # Font for standard mode
+│       └── quran-simple.txt   # Plain Arabic text (Tanzil)
 └── generated/                  # Output directory (auto-created)
 ```
 
 ## 🗄️ Data Sources & Academic Credits
 
-This project stands on the shoulders of giants in Islamic digital scholarship. The academic depth and accuracy of the generated workbooks are made possible by the following trusted sources:
+This project stands on the shoulders of giants in Islamic digital scholarship. The academic depth and accuracy of the generated workbooks are made possible by trusted sources from:
 
-### 1. 📚 Linguistic & Morphological Research (Quranic Universal Library - QUL)
+- **[QUL Tarteel](https://qul.tarteel.ai/)** - Morphology databases, word-by-word scripts, and fonts
+- **[Tanzil.net](https://tanzil.net/)** - Quranic text and metadata
+- **[Quranic Arabic Corpus](http://corpus.quran.com/)** (University of Leeds) - Part-of-speech tagging
+- **[King Fahd Complex](https://fonts.qurancomplex.gov.sa/)** - Arabic typography
 
-The Pro Academic Engine's morphological analysis is powered by specialized research databases from the **Quranic Universal Library (QUL)**. These relational SQLite databases enable automated mapping of Indo-Pak script to classical Arabic roots:
+### 📋 Detailed Documentation
 
-- **`word-root.db` / `ayah-root.db`**: Primary source for trilateral root extraction
-- **`word-lemma.db` / `ayah-lemma.db`**: Dictionary form identification for Quranic vocabulary
-- **`word-stem.db` / `ayah-stem.db`**: Sarf (morphological) analysis and verb stem identification
+For complete information about all data sources, including:
+- Exact download links and versions
+- Database schemas and compatibility
+- License information
+- Setup instructions
+- Update procedures
 
-**Purpose**: These databases form the backbone of the word-by-word grammatical analysis, allowing students to trace each word back to its classical Arabic root.
+**See: [`DATA_SOURCES.md`](DATA_SOURCES.md)**
 
-### 2. 📖 Standard Text & Metadata (The Tanzil Project)
+### Quick Setup
 
-The project utilizes verified "Standard Model" datasets from **[Tanzil.net](https://tanzil.net/download/)**, serving as the baseline for text accuracy and global Quranic metadata:
+The `sources/` directory is not included in the repository. To set up:
 
-- **`quran-simple.txt`**: Primary source for the Standard Engine's text generation (simple, clean Arabic text without diacritics)
-- **`quran-data.xml`**: Structural metadata including:
-  - Surah names (Arabic and English transliteration)
-  - Ayah counts per Surah
-  - Classification (Makki/Madani)
-  - Revelation order
-
-**Purpose**: Ensures textual accuracy and provides the organizational structure for all generated workbooks.
-
-### 3. 🎓 Parts of Speech & Grammar (Leeds Quranic Corpus)
-
-The automated color-coding logic (Ism/Noun, Fi'l/Verb, Harf/Particle) is derived from the **Quranic Arabic Corpus** at the University of Leeds:
-
-- **Source**: `quranic-corpus-morphology-0.4.txt` (Maintained by Kais Dukes)
-- **Role**: Provides POS (Part of Speech) tags that are mapped to specific color hex codes in `config.py`
-- **Website**: [corpus.quran.com](http://corpus.quran.com/)
-
-**Purpose**: Enables visual grammatical distinction, helping students quickly identify word types and their syntactic roles.
-
-### 4. ✍️ Indo-Pak Script & Typography
-
-#### Indo-Pak Nastaleeq Database
-- **`indopak-nastaleeq.db`**: Primary source for the specific orthography used in the Indo-Pak subcontinent
-- **Purpose**: Ensures generated workbooks match the visual style of the Mus'haf used in Alimiyya curriculum and familiar to students in South Asia
-
-#### King Fahd Glorious Qur'an Printing Complex (KFGQPC)
-- **Font**: `KFGQPCNastaleeq-Regular.ttf`
-- **Download**: [fonts.qurancomplex.gov.sa](https://fonts.qurancomplex.gov.sa/)
-- **Technical Implementation**: The software uses direct OOXML injection to force Microsoft Word to utilize the font's Complex Script features, ensuring proper rendering of Arabic diacritics and ligatures
-
-**Purpose**: Provides authentic, beautiful Nastaleeq typography that matches traditional Quranic manuscripts and printed Mus'hafs.
-
-### Setting Up Data Sources
-
-The `sources/` directory is not included in the repository due to licensing and size constraints. To set up:
-
-1. **Download Quran text** from Tanzil.net (simple format)
-2. **Download morphology data** from Quranic Corpus
-3. **Obtain QUL databases** (word-root.db, word-lemma.db, word-stem.db)
-4. **Download Indo-Pak database** (indopak-nastaleeq.db)
-5. **Install KFGQPC font** from King Fahd Complex
-6. **Place files** according to the structure defined in `config.py`
+1. **Review** [`DATA_SOURCES.md`](DATA_SOURCES.md) for all download links
+2. **Download** required resources for your mode (Standard/Pro)
+3. **Place files** in the appropriate directories as documented
+4. **Configure** paths in [`config.py`](config.py:1) if needed
 
 ### Data Integrity & Verification
 

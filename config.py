@@ -3,23 +3,49 @@ import os
 # Base directory mapping
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-PATHS = {
-    # Core Text Database (Indo-Pak Word-by-Word)
-    "text_db": "sources/text/indopak-nastaleeq.db",
-
-    # Metadata Source (Tanzil XML)
-    "metadata_xml": "sources/metadata/quran-data.xml",
-
-    # Linguistic Databases (QUL Morphology)
-    "morphology": {
-        "root": "sources/morphology/word-root.db",
-        "leeds_txt": "sources/morphology/quranic-corpus-morphology-0.4.txt"
+# Theme definitions for Pro Academic Mode
+THEMES = {
+    "indopak": {
+        "name": "Indo-Pak Nastaleeq",
+        "text_db": "sources/themes/indopak/text/indopak-nastaleeq.db",
+        "font_name": "AlQuran IndoPak by QuranWBW",
+        "font_file": "sources/themes/indopak/fonts/AlQuran IndoPak by QuranWBW.ttf",
+        "description": "Traditional Indo-Pak script with Nastaleeq calligraphy"
     },
+    "uthmani": {
+        "name": "Uthmani Script (HAFS)",
+        "text_db": "sources/themes/uthmani/text/uthmani.db",
+        "font_name": "KFGQPC Uthmanic Script HAFS",
+        "font_file": "sources/themes/uthmani/fonts/KFGQPC Uthmanic Script HAFS.otf",
+        "description": "Classical Uthmani script with HAFS narration"
+    }
+}
 
-    # Assets
-    "font_ttf": "sources/fonts/KFGQPCNastaleeq-Regular.ttf",
+# Default theme for Pro mode
+DEFAULT_THEME = "indopak"
 
-    # Output
+# Paths configuration
+PATHS = {
+    # Shared resources (used by all themes)
+    "metadata_xml": "sources/shared/metadata/quran-data.xml",
+    "morphology": {
+        "root": "sources/shared/morphology/word-root.db",
+        "lemma": "sources/shared/morphology/word-lemma.db",
+        "stem": "sources/shared/morphology/word-stem.db",
+        "ayah_root": "sources/shared/morphology/ayah-root.db",
+        "ayah_lemma": "sources/shared/morphology/ayah-lemma.db",
+        "ayah_stem": "sources/shared/morphology/ayah-stem.db",
+        "leeds_txt": "sources/shared/morphology/quranic-corpus-morphology-0.4.txt"
+    },
+    
+    # Standard/Simple mode resources (non-Pro)
+    "standard": {
+        "text_file": "sources/standard/quran-simple.txt",
+        "font_file": "sources/standard/KFGQPCNastaleeq-Regular.ttf",
+        "font_name": "KFGQPC Nastaleeq Regular"
+    },
+    
+    # Output directory
     "output_dir": "generated"
 }
 
@@ -40,9 +66,38 @@ POS_MAP = {
 
 # Academic Layout Styling
 STYLE = {
-    "font_name": "KFGQPC Nastaleeq Regular",
     "font_size_arabic": 24,      # Large for Tashkeel clarity
     "font_size_header": 11,
-    "table_header_bg": "F2F2F2", # Updated key to match script
+    "table_header_bg": "F2F2F2", # Light grey for table headers
     "ayah_row_bg": "EBF1DE"      # Subtle Green for Ayah separators
 }
+
+def get_theme_config(theme_name=None):
+    """
+    Get configuration for a specific theme.
+    
+    Args:
+        theme_name: Name of the theme ('indopak' or 'uthmani'). 
+                   If None, returns default theme.
+    
+    Returns:
+        Dictionary containing theme configuration
+    """
+    if theme_name is None:
+        theme_name = DEFAULT_THEME
+    
+    if theme_name not in THEMES:
+        raise ValueError(f"Unknown theme: {theme_name}. Available themes: {list(THEMES.keys())}")
+    
+    return THEMES[theme_name]
+
+def list_available_themes():
+    """
+    List all available themes with their descriptions.
+    
+    Returns:
+        Dictionary of theme names and their descriptions
+    """
+    return {name: config["description"] for name, config in THEMES.items()}
+
+# Made with Bob

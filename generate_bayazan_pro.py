@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import argparse
+import shutil
 import xml.etree.ElementTree as ET
 from docx import Document
 from docx.shared import Pt, Inches, RGBColor
@@ -8,14 +9,33 @@ from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn, nsdecls
 from docx.oxml import OxmlElement, parse_xml
-from config import PATHS, COLORS, STYLE, POS_MAP
+from config import PATHS, COLORS, STYLE, POS_MAP, THEMES, DEFAULT_THEME, get_theme_config, list_available_themes
 
 class BayazanProEngine:
-    def __init__(self):
+    def __init__(self, theme=None):
+        """
+        Initialize the Pro Academic Engine with theme support.
+        
+        Args:
+            theme: Theme name ('indopak' or 'uthmani'). If None, uses default theme.
+        """
+        self.theme_name = theme or DEFAULT_THEME
+        self.theme_config = get_theme_config(self.theme_name)
+        
+        # Validate theme resources exist
+        if not os.path.exists(self.theme_config["text_db"]):
+            raise FileNotFoundError(
+                f"Theme '{self.theme_name}' text database not found: {self.theme_config['text_db']}\n"
+                f"Please ensure the theme resources are properly installed."
+            )
+        
         self.metadata = self._parse_metadata()
         self.morph_map = self._parse_leeds_morphology()
         # Para/Juz mapping for Juz 30
         self.juz_map = {i: 30 for i in range(78, 115)} 
+        
+        print(f"🎨 Using theme: {self.theme_config['name']}")
+        print(f"📝 Font: {self.theme_config['font_name']}")
 
     def _parse_metadata(self):
         tree = ET.parse(PATHS["metadata_xml"])
@@ -46,8 +66,26 @@ class BayazanProEngine:
         return mapping
 
     def is_structural_symbol(self, text):
+        """Check if text is a structural symbol (sajdah, ruku, waqf marks, etc.)"""
         if len(text) == 1 and ord(text[0]) > 0x06FF: return True
-        markers = ['', '', '', '', '', '', '', '', '', '', 'ۜ', 'ۘ', 'ۙ', 'ۚ', 'ۛ', 'ۜ']
+        
+        # Comprehensive list of Quranic structural markers
+        markers = [
+            # Sajdah markers
+            '۩',
+            # Ruku markers
+            '۞',
+            # Waqf (pause) marks
+            'ۖ', 'ۗ', 'ۘ', 'ۙ', 'ۚ', 'ۛ', 'ۜ',
+            # Small high signs
+            'ۣ', 'ۤ', 'ۥ', 'ۦ',
+            # Maddah and other marks
+            '۟', '۠',
+            # Quranic annotation marks
+            '۝', '۞',
+            # Additional pause marks
+            'ۗ', 'ۖ'
+        ]
         return any(m in text for m in markers)
 
     def set_cell_shading(self, cell, hex_color):
@@ -56,16 +94,19 @@ class BayazanProEngine:
         tcPr.append(shd)
 
     def set_arabic_font(self, run, size, color=None):
-        run.font.name = STYLE["font_name"]
+        """Set Arabic font using the current theme's font configuration."""
+        font_name = self.theme_config["font_name"]
+        run.font.name = font_name
         run.font.size = Pt(size)
         if color: run.font.color.rgb = RGBColor(*color)
         rPr = run._element.get_or_add_rPr()
         rFonts = OxmlElement('w:rFonts')
-        rFonts.set(qn('w:cs'), STYLE["font_name"])
+        rFonts.set(qn('w:cs'), font_name)
         rPr.append(rFonts)
 
     def get_enriched_words(self, sura, ayah):
-        conn_text = sqlite3.connect(PATHS["text_db"])
+        """Get words with morphological enrichment using theme's text database."""
+        conn_text = sqlite3.connect(self.theme_config["text_db"])
         conn_root = sqlite3.connect(PATHS["morphology"]["root"])
         words = conn_text.execute(
             "SELECT location, text FROM words WHERE surah=? AND ayah=? ORDER BY word", 
@@ -101,7 +142,7 @@ class BayazanProEngine:
         # 1. Cover Page
         p_intro = doc.add_paragraph()
         p_intro.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run_intro = p_intro.add_run("أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ\nبِسْم. اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ")
+        run_intro = p_intro.add_run("أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ\nبِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ")
         self.set_arabic_font(run_intro, 26)
         doc.add_page_break()
 
@@ -177,16 +218,128 @@ class BayazanProEngine:
 
             doc.add_page_break()
 
+        # Ensure output directory exists
+        os.makedirs(PATHS["output_dir"], exist_ok=True)
+        
         output_path = os.path.join(PATHS["output_dir"], output_filename)
         doc.save(output_path)
+        
+        # Copy font file to generated directory
+        self._copy_font_to_output()
+        
+        # Create README if it doesn't exist
+        self._create_font_readme()
+        
         print(f"✅ Success! Workbook generated: {output_filename}")
 
+    def _copy_font_to_output(self):
+        """Copy the theme's font file to the generated directory."""
+        font_source = self.theme_config["font_file"]
+        if os.path.exists(font_source):
+            font_filename = os.path.basename(font_source)
+            font_dest = os.path.join(PATHS["output_dir"], font_filename)
+            
+            # Only copy if it doesn't exist or is different
+            if not os.path.exists(font_dest):
+                shutil.copy2(font_source, font_dest)
+                print(f"📝 Font copied: {font_filename}")
+        else:
+            print(f"⚠️  Warning: Font file not found: {font_source}")
+
+    def _create_font_readme(self):
+        """Create a README file in the generated directory with font installation instructions."""
+        readme_path = os.path.join(PATHS["output_dir"], "FONT_INSTALLATION.md")
+        
+        # Only create if it doesn't exist
+        if not os.path.exists(readme_path):
+            readme_content = f"""# Font Installation Required
+
+## ⚠️ Important: Install Font Before Opening Documents
+
+The generated Word documents in this directory use a specific Arabic font for proper text rendering. You **must** install the font before opening the documents to ensure correct display.
+
+### Current Theme: {self.theme_config['name']}
+**Font Required:** `{self.theme_config['font_name']}`
+
+### Installation Instructions
+
+#### Windows:
+1. Locate the font file: `{os.path.basename(self.theme_config['font_file'])}`
+2. Right-click on the font file
+3. Select "Install" or "Install for all users"
+4. Restart Microsoft Word if it's already open
+
+#### macOS:
+1. Double-click the font file: `{os.path.basename(self.theme_config['font_file'])}`
+2. Click "Install Font" in Font Book
+3. Restart Microsoft Word if it's already open
+
+#### Linux:
+1. Copy the font file to `~/.fonts/` or `/usr/share/fonts/`
+2. Run: `fc-cache -f -v`
+3. Restart your document viewer
+
+### Verification
+
+After installing the font:
+1. Open any generated `.docx` file
+2. The Arabic text should display clearly with proper diacritics
+3. If text appears as boxes or incorrect characters, the font is not properly installed
+
+### Font Sources
+
+- **Indo-Pak Theme**: AlQuran IndoPak by QuranWBW
+- **Uthmani Theme**: (To be added)
+- **Standard Mode**: KFGQPC Nastaleeq Regular from [King Fahd Complex](https://fonts.qurancomplex.gov.sa/)
+
+### Troubleshooting
+
+If the text still doesn't display correctly after installation:
+1. Ensure you installed the correct font file
+2. Restart your computer (not just Word)
+3. Check that the font appears in your system's font list
+4. Try opening the document in a different Word version
+
+---
+
+**Generated by Alimiyya Bayazan Generator**
+"""
+            
+            with open(readme_path, 'w', encoding='utf-8') as f:
+                f.write(readme_content)
+            print(f"📄 Created: FONT_INSTALLATION.md")
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--start", type=int, required=True)
-    parser.add_argument("--end", type=int, required=True)
-    parser.add_argument("-o", "--output", type=str)
+    parser = argparse.ArgumentParser(
+        description="Generate Pro Academic Quranic Workbooks with theme support",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=f"""
+Available Themes:
+{chr(10).join(f"  • {name}: {desc}" for name, desc in list_available_themes().items())}
+
+Examples:
+  python generate_bayazan_pro.py --start 78 --end 114 --theme indopak
+  python generate_bayazan_pro.py --start 1 --end 2 --theme uthmani -o "My_Workbook.docx"
+        """
+    )
+    parser.add_argument("--start", type=int, required=True, help="Starting Surah number (1-114)")
+    parser.add_argument("--end", type=int, required=True, help="Ending Surah number (1-114)")
+    parser.add_argument("-o", "--output", type=str, help="Custom output filename")
+    parser.add_argument("--theme", type=str, default=DEFAULT_THEME, 
+                       choices=list(THEMES.keys()),
+                       help=f"Theme to use (default: {DEFAULT_THEME})")
     args = parser.parse_args()
     
-    filename = args.output or f"Academic_Bayazan_{args.start}_{args.end}.docx"
-    BayazanProEngine().create_workbook(args.start, args.end, filename)
+    filename = args.output or f"Academic_Bayazan_{args.theme}_{args.start}_{args.end}.docx"
+    
+    try:
+        engine = BayazanProEngine(theme=args.theme)
+        engine.create_workbook(args.start, args.end, filename)
+    except FileNotFoundError as e:
+        print(f"❌ Error: {e}")
+        exit(1)
+    except ValueError as e:
+        print(f"❌ Error: {e}")
+        exit(1)
+
+# Made with Bob

@@ -4,12 +4,15 @@
 IS_PRO=false
 SCRIPT_NAME="generate_bayazan.py"
 OUTPUT_DIR="generated"
+THEME="indopak"  # Default theme for Pro mode
 
 # --- ARGUMENT PARSING ---
 for arg in "$@"; do
     if [ "$arg" == "--pro" ]; then
         IS_PRO=true
         SCRIPT_NAME="generate_bayazan_pro.py"
+    elif [[ "$arg" == --theme=* ]]; then
+        THEME="${arg#*=}"
     fi
 done
 
@@ -27,7 +30,9 @@ fi
 
 # --- STARTUP INFO ---
 MODE_LABEL="STANDARD (2-column)"
-[[ "$IS_PRO" == true ]] && MODE_LABEL="PRO ACADEMIC (4-column)"
+if [[ "$IS_PRO" == true ]]; then
+    MODE_LABEL="PRO ACADEMIC (4-column) - Theme: $THEME"
+fi
 
 echo "=========================================="
 echo "🚀 Starting Alimiyya Bayazan Generator"
@@ -43,12 +48,23 @@ generate_volume() {
 
     echo -n "👉 Generating $output ($start-$end)... "
 
-    if $PY_CMD "$SCRIPT_NAME" --start "$start" --end "$end" -o "$output" > /dev/null 2>&1; then
-        echo "✅ DONE"
+    # Add theme parameter only for Pro mode
+    if [[ "$IS_PRO" == true ]]; then
+        if $PY_CMD "$SCRIPT_NAME" --start "$start" --end "$end" --theme "$THEME" -o "$output" > /dev/null 2>&1; then
+            echo "✅ DONE"
+        else
+            echo "❌ FAILED"
+            echo "Error: Check logs by running: $PY_CMD $SCRIPT_NAME --start $start --end $end --theme $THEME -o $output"
+            exit 1
+        fi
     else
-        echo "❌ FAILED"
-        echo "Error: Check logs by running: $PY_CMD $SCRIPT_NAME --start $start --end $end -o $output"
-        exit 1
+        if $PY_CMD "$SCRIPT_NAME" --start "$start" --end "$end" -o "$output" > /dev/null 2>&1; then
+            echo "✅ DONE"
+        else
+            echo "❌ FAILED"
+            echo "Error: Check logs by running: $PY_CMD $SCRIPT_NAME --start $start --end $end -o $output"
+            exit 1
+        fi
     fi
 }
 
