@@ -132,6 +132,40 @@ class BayazanProEngine:
         conn_text.close(); conn_root.close()
         return full_ref, enriched
 
+    def add_page_number(self, paragraph):
+        """Injects dynamic Word PAGE field into a paragraph."""
+        run = paragraph.add_run()
+        fldSimple = OxmlElement('w:fldSimple')
+        fldSimple.set(qn('w:instr'), 'PAGE')
+        run._r.append(fldSimple)
+
+    def add_table_of_contents(self, paragraph):
+        """Injects a native MS Word Table of Contents (TOC) field."""
+        run1 = paragraph.add_run()
+        fldChar1 = OxmlElement('w:fldChar')
+        fldChar1.set(qn('w:fldCharType'), 'begin')
+        run1._r.append(fldChar1)
+
+        run2 = paragraph.add_run()
+        instrText = OxmlElement('w:instrText')
+        instrText.set(qn('xml:space'), 'preserve')
+        instrText.text = 'TOC \\o "1-1" \\h \\z \\u'
+        run2._r.append(instrText)
+
+        run3 = paragraph.add_run()
+        fldChar2 = OxmlElement('w:fldChar')
+        fldChar2.set(qn('w:fldCharType'), 'separate')
+        run3._r.append(fldChar2)
+
+        run4 = paragraph.add_run(" Right-click here and select 'Update Field' to generate the Index.")
+        run4.font.italic = True
+        run4.font.color.rgb = RGBColor(150, 150, 150)
+
+        run5 = paragraph.add_run()
+        fldChar3 = OxmlElement('w:fldChar')
+        fldChar3.set(qn('w:fldCharType'), 'end')
+        run5._r.append(fldChar3)
+
     def create_workbook(self, start, end, output_filename):
         doc = Document()
         
@@ -145,11 +179,63 @@ class BayazanProEngine:
         section.page_width, section.page_height = Inches(11.69), Inches(8.27)
         section.left_margin = section.right_margin = Inches(0.5)
 
+        # Add footer with page numbers
+        footer = section.footer
+        footer_para = footer.paragraphs[0]
+        footer_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        self.add_page_number(footer_para)
+
         # 1. Cover Page
-        p_intro = doc.add_paragraph()
-        p_intro.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run_intro = p_intro.add_run("أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ\nبِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ")
-        self.set_arabic_font(run_intro, 26)
+        doc.add_paragraph("\n\n")
+        
+        p_taawwudh = doc.add_paragraph()
+        p_taawwudh.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run_taawwudh = p_taawwudh.add_run("أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ")
+        self.set_arabic_font(run_taawwudh, 28)
+
+        p_bismillah = doc.add_paragraph()
+        p_bismillah.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run_bismillah = p_bismillah.add_run("بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ")
+        self.set_arabic_font(run_bismillah, 28)
+        
+        doc.add_paragraph("\n")
+        
+        # Title Block
+        p_title_block = doc.add_paragraph()
+        p_title_block.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run_main_title = p_title_block.add_run("Alimiyya Bayazan Pro Workbook\n")
+        run_main_title.bold = True
+        run_main_title.font.size = Pt(28)
+        run_main_title.font.color.rgb = RGBColor(0, 51, 102)
+        
+        run_sub_title = p_title_block.add_run(f"Covering Surah {start} to Surah {end}\n")
+        run_sub_title.font.size = Pt(18)
+        run_sub_title.font.color.rgb = RGBColor(100, 100, 100)
+        
+        run_theme = p_title_block.add_run(f"Theme: {self.theme_config['name']}\n\n")
+        run_theme.font.size = Pt(14)
+        run_theme.font.color.rgb = RGBColor(128, 128, 128)
+        
+        doc.add_paragraph("\n")
+        
+        # 2. Table of Contents
+        p_index_title = doc.add_paragraph()
+        p_index_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run_index_title = p_index_title.add_run("Index / الفهرس")
+        run_index_title.bold = True
+        run_index_title.font.size = Pt(16)
+
+        p_note = doc.add_paragraph()
+        p_note.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run_note = p_note.add_run("📌 Quick Note: To calculate dynamic page numbers, right-click the grey text below and select 'Update Field'.")
+        run_note.font.italic = True
+        run_note.font.size = Pt(10)
+        run_note.font.color.rgb = RGBColor(128, 128, 128)
+        
+        p_toc = doc.add_paragraph()
+        p_toc.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        self.add_table_of_contents(p_toc)
+        
         doc.add_page_break()
 
         for s_num in range(start, end + 1):

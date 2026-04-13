@@ -5,7 +5,7 @@
 
 set -e  # Exit on error
 
-VERSION="v1.0.0"
+VERSION="v1.0.1"
 RELEASE_DIR="release-artifacts"
 
 echo "=========================================="
