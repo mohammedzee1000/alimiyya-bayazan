@@ -6,6 +6,24 @@
 
 The first stable release of **Alimiyya Bayazan** - a comprehensive Quranic study workbook generator designed for Islamic education. This tool creates beautifully formatted Microsoft Word documents with word-by-word Arabic analysis, morphological data, and space for student notes.
 
+## 📦 Download Pre-Generated Workbooks
+
+Don't want to generate the workbooks yourself? Download pre-generated artifacts:
+
+- **Standard Mode** (2-column layout)
+  - `alimiyya-bayazan-standard-v1.0.0.tar.gz` (Linux/macOS)
+  - `alimiyya-bayazan-standard-v1.0.0.zip` (Windows)
+
+- **Pro Mode - Indo-Pak Theme** (4-column with morphology)
+  - `alimiyya-bayazan-pro-indopak-v1.0.0.tar.gz` (Linux/macOS)
+  - `alimiyya-bayazan-pro-indopak-v1.0.0.zip` (Windows)
+
+- **Pro Mode - Uthmani Theme** (4-column with morphology)
+  - `alimiyya-bayazan-pro-uthmani-v1.0.0.tar.gz` (Linux/macOS)
+  - `alimiyya-bayazan-pro-uthmani-v1.0.0.zip` (Windows)
+
+Each archive contains all 25 volumes covering the entire Quran, plus fonts and installation instructions.
+
 ---
 
 ## ✨ Key Features

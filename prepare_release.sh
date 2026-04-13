@@ -56,16 +56,22 @@ cleanup_generated() {
 # Function to package artifacts
 package_artifacts() {
     local mode=$1
-    local tarball_name=$2
+    local base_name=$2
     
     echo "📦 Packaging $mode artifacts..."
     cd generated
-    tar -czf "../$RELEASE_DIR/$tarball_name" *.docx *.ttf *.otf *.md 2>/dev/null || true
-    cd ..
     
-    # Get tarball size
-    local size=$(du -h "$RELEASE_DIR/$tarball_name" | cut -f1)
-    echo "✅ Created: $tarball_name ($size)"
+    # Create tar.gz (for Linux/macOS users)
+    tar -czf "../$RELEASE_DIR/${base_name}.tar.gz" *.docx *.ttf *.otf *.md 2>/dev/null || true
+    local tar_size=$(du -h "../$RELEASE_DIR/${base_name}.tar.gz" | cut -f1)
+    echo "✅ Created: ${base_name}.tar.gz ($tar_size)"
+    
+    # Create zip (for Windows users - native support)
+    zip -q -r "../$RELEASE_DIR/${base_name}.zip" *.docx *.ttf *.otf *.md 2>/dev/null || true
+    local zip_size=$(du -h "../$RELEASE_DIR/${base_name}.zip" | cut -f1)
+    echo "✅ Created: ${base_name}.zip ($zip_size)"
+    
+    cd ..
     echo ""
 }
 
@@ -90,7 +96,7 @@ if [ $? -eq 0 ]; then
     docx_count=$(ls -1 generated/*.docx 2>/dev/null | wc -l)
     echo "📊 Generated $docx_count workbook files"
     
-    package_artifacts "Standard Mode" "alimiyya-bayazan-standard-$VERSION.tar.gz"
+    package_artifacts "Standard Mode" "alimiyya-bayazan-standard-$VERSION"
 else
     echo "❌ Standard mode generation failed!"
     exit 1
@@ -117,7 +123,7 @@ if [ $? -eq 0 ]; then
     docx_count=$(ls -1 generated/*.docx 2>/dev/null | wc -l)
     echo "📊 Generated $docx_count workbook files"
     
-    package_artifacts "Pro Indo-Pak Mode" "alimiyya-bayazan-pro-indopak-$VERSION.tar.gz"
+    package_artifacts "Pro Indo-Pak Mode" "alimiyya-bayazan-pro-indopak-$VERSION"
 else
     echo "❌ Pro Indo-Pak mode generation failed!"
     exit 1
@@ -144,7 +150,7 @@ if [ $? -eq 0 ]; then
     docx_count=$(ls -1 generated/*.docx 2>/dev/null | wc -l)
     echo "📊 Generated $docx_count workbook files"
     
-    package_artifacts "Pro Uthmani Mode" "alimiyya-bayazan-pro-uthmani-$VERSION.tar.gz"
+    package_artifacts "Pro Uthmani Mode" "alimiyya-bayazan-pro-uthmani-$VERSION"
 else
     echo "❌ Pro Uthmani mode generation failed!"
     exit 1
@@ -164,7 +170,9 @@ echo "=========================================="
 echo ""
 echo "📦 Release Artifacts:"
 echo ""
-ls -lh "$RELEASE_DIR"/*.tar.gz
+ls -lh "$RELEASE_DIR"/*
+echo ""
+echo "📊 Total artifacts: $(ls -1 "$RELEASE_DIR" | wc -l) files"
 echo ""
 echo "📍 Location: $RELEASE_DIR/"
 echo ""
