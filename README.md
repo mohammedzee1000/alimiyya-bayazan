@@ -209,6 +209,20 @@ This project uses academically verified Islamic resources from:
 
 **For complete setup instructions, download links, and database schemas, see: [`DATA_SOURCES.md`](DATA_SOURCES.md)**
 
+### ⚠️ Data Accuracy Notice
+
+While this project uses academically verified sources, **morphological data (roots, stems, lemmas) may occasionally contain errors**. These are extremely rare but can occur due to:
+- Source database inconsistencies
+- Complex grammatical edge cases
+- Variant linguistic interpretations
+
+**If you notice any errors:**
+1. Verify against multiple scholarly sources
+2. Report issues on [GitHub Issues](https://github.com/mohammedzee1000/alimiyya-bayazan/issues)
+3. Include: Surah:Ayah:Word location and the suspected error
+
+We continuously improve data quality based on community feedback. Always cross-reference with qualified scholars for authoritative rulings.
+
 ## ⚙️ Configuration
 
 Edit [`config.py`](config.py) to customize:
