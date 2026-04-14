@@ -1,0 +1,13 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📚 Documentation
+    url: https://github.com/mohammedzee1000/alimiyya-bayazan/blob/main/README.md
+    about: Read the project documentation and usage instructions
+  - name: 💬 Discussions
+    url: https://github.com/mohammedzee1000/alimiyya-bayazan/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 🌍 Translation Contributions
+    url: https://github.com/mohammedzee1000/alimiyya-bayazan/issues?q=is%3Aissue+is%3Aopen+label%3Atranslation
+    about: Help translate documentation to other languages
+
+# Made with Bob
