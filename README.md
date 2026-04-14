@@ -2,9 +2,32 @@
 
 A Python-based tool for generating comprehensive Quranic study workbooks (Bayazan) designed for Alimiyya Islamic education courses. The system creates beautifully formatted Microsoft Word documents with word-by-word Arabic analysis, morphological data, and space for student notes.
 
-> **📦 Using Pre-Generated Workbooks?** If you downloaded release artifacts (`.tar.gz` or `.zip` files), please refer to:
-> - [`USAGE_INSTRUCTIONS.md`](USAGE_INSTRUCTIONS.md) included in your downloaded archive, OR
-> - [View online in the repository](https://github.com/mohammedzee1000/alimiyya-bayazan/blob/main/USAGE_INSTRUCTIONS.md)
+## 📥 Download Pre-Generated Workbooks
+
+**Don't want to run Python scripts?** Download ready-to-use workbooks:
+
+👉 **[Download Latest Release](https://github.com/mohammedzee1000/alimiyya-bayazan/releases/latest)**
+
+### Available Downloads:
+- **Standard Mode** (2-column layout)
+  - `alimiyya-bayazan-standard-v1.0.0.tar.gz` (Linux/macOS)
+  - `alimiyya-bayazan-standard-v1.0.0.zip` (Windows)
+
+- **Pro Mode - Indo-Pak** (4-column with morphology)
+  - `alimiyya-bayazan-pro-indopak-v1.0.0.tar.gz` (Linux/macOS)
+  - `alimiyya-bayazan-pro-indopak-v1.0.0.zip` (Windows)
+
+- **Pro Mode - Uthmani** (4-column with morphology)
+  - `alimiyya-bayazan-pro-uthmani-v1.0.0.tar.gz` (Linux/macOS)
+  - `alimiyya-bayazan-pro-uthmani-v1.0.0.zip` (Windows)
+
+Each archive contains all 25 volumes covering the entire Quran, plus fonts and setup instructions.
+
+> **📖 After downloading:** See [`USAGE_INSTRUCTIONS.md`](USAGE_INSTRUCTIONS.md) included in the archive, or [view online](https://github.com/mohammedzee1000/alimiyya-bayazan/blob/main/USAGE_INSTRUCTIONS.md)
+
+---
+
+## 💻 For Developers: Generate Your Own Workbooks
 
 ## 🌟 Features
 
