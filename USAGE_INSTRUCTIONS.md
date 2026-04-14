@@ -1,5 +1,7 @@
 # Using Alimiyya Bayazan Workbooks
 
+**Languages:** [English](USAGE_INSTRUCTIONS.md) | [اردو (Urdu)](USAGE_INSTRUCTIONS.ur.md)
+
 Thank you for downloading the Alimiyya Bayazan Quranic study workbooks! This guide will help you get started.
 
 ## ⚠️ CRITICAL: Install Fonts First!

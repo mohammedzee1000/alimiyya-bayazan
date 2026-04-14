@@ -1,5 +1,7 @@
 # Alimiyya Bayazan - Quranic Study Workbook Generator
 
+**Languages:** [English](README.md) | [اردو (Urdu)](README.ur.md)
+
 A Python-based tool for generating comprehensive Quranic study workbooks (Bayazan) designed for Alimiyya Islamic education courses. The system creates beautifully formatted Microsoft Word documents with word-by-word Arabic analysis, morphological data, and space for student notes.
 
 ## 📥 Download Pre-Generated Workbooks
