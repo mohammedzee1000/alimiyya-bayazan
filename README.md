@@ -8,7 +8,7 @@ A Python-based tool for generating comprehensive Quranic study workbooks (Bayaza
 
 **Don't want to run Python scripts?** Download ready-to-use workbooks:
 
-👉 **[Release Notes](https://github.com/mohammedzee1000/alimiyya-bayazan/releases/latest)** | **[Download Assets](https://github.com/mohammedzee1000/alimiyya-bayazan/releases/latest#assets)**
+👉 **[Release Notes](https://github.com/mohammedzee1000/alimiyya-bayazan/releases/latest)** | **[Download Assets](https://github.com/mohammedzee1000/alimiyya-bayazan/releases/expanded_assets/latest)**
 
 ### Available Downloads:
 - **Standard Mode** (2-column layout)
