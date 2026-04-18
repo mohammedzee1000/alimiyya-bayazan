@@ -14,6 +14,12 @@ from config import PATHS
 INPUT_FILE = PATHS["standard"]["text_file"]
 ARABIC_FONT = PATHS["standard"]["font_name"]
 
+def to_arabic_numerals(num):
+    """Convert English numerals to Arabic-Indic numerals."""
+    arabic_digits = '٠١٢٣٤٥٦٧٨٩'
+    return ''.join(arabic_digits[int(d)] for d in str(num))
+
+
 def set_arabic_font(run, size):
     """Forces macOS Word to respect the complex script Arabic font."""
     run.font.name = ARABIC_FONT
@@ -208,13 +214,38 @@ def create_doc(start_surah, end_surah, output_filepath):
             doc.add_paragraph("\n\n\n") 
 
         # --- 2. AYAH HEADER ---
-        doc.add_paragraph("_" * 80) 
+        doc.add_paragraph("_" * 80)
         
+        # English "Ayah X:" label on separate line
+        p_ayah_num = doc.add_paragraph()
+        p_ayah_num.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        run_ayah_label = p_ayah_num.add_run(f"Ayah {a_num}:")
+        run_ayah_label.font.size = Pt(14)
+        run_ayah_label.font.color.rgb = RGBColor(100, 100, 100)
+        run_ayah_label.bold = True
+        
+        # Ayah text with Arabic-Indic number at the end
         p_ayah = doc.add_paragraph()
         p_ayah.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        p_ayah.paragraph_format.line_spacing = Pt(40) 
-        run_ayah = p_ayah.add_run(f"{ayah_text} ﴿{a_num}﴾")
-        set_arabic_font(run_ayah, 26)
+        p_ayah.paragraph_format.line_spacing = Pt(40)
+        
+        # Add ayah text
+        run_ayah_text = p_ayah.add_run(ayah_text + " ")
+        set_arabic_font(run_ayah_text, 26)
+        
+        # Add ayah number with square brackets and Arabic-Indic numerals
+        # Using square brackets for reliable rendering across all fonts
+        arabic_num = to_arabic_numerals(a_num)
+        run_ayah_num = p_ayah.add_run(f"[{arabic_num}]")
+        run_ayah_num.font.name = "Arial"
+        run_ayah_num.font.size = Pt(18)
+        run_ayah_num.font.bold = True
+        # Set complex script font
+        r = run_ayah_num._element
+        rPr = r.get_or_add_rPr()
+        rFonts = OxmlElement('w:rFonts')
+        rFonts.set(qn('w:cs'), 'Arial')
+        rPr.append(rFonts)
 
         # --- 3. WORD-BY-WORD TARKEEB TABLE ---
         words = ayah_text.split()

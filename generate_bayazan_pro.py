@@ -11,6 +11,11 @@ from docx.oxml.ns import qn, nsdecls
 from docx.oxml import OxmlElement, parse_xml
 from config import PATHS, COLORS, STYLE, POS_MAP, THEMES, DEFAULT_THEME, get_theme_config, list_available_themes
 
+def to_arabic_numerals(num):
+    """Convert English numerals to Arabic-Indic numerals."""
+    arabic_digits = '٠١٢٣٤٥٦٧٨٩'
+    return ''.join(arabic_digits[int(d)] for d in str(num))
+
 class BayazanProEngine:
     def __init__(self, theme=None):
         """
@@ -109,12 +114,14 @@ class BayazanProEngine:
         conn_text = sqlite3.connect(self.theme_config["text_db"])
         conn_root = sqlite3.connect(PATHS["morphology"]["root"])
         words = conn_text.execute(
-            "SELECT location, text FROM words WHERE surah=? AND ayah=? ORDER BY word", 
+            "SELECT location, text FROM words WHERE surah=? AND ayah=? ORDER BY word",
             (sura, ayah)
         ).fetchall()
         
         clean_header = " ".join([w[1] for w in words if not self.is_structural_symbol(w[1])])
-        full_ref = f"{clean_header} \u200f﴿{ayah}﴾\u200f"
+        # Store both the text and the ayah number separately for proper font handling
+        arabic_num = to_arabic_numerals(ayah)
+        full_ref = f"{clean_header} \u200f﴿{arabic_num}﴾\u200f"
         
         enriched = []
         for loc, text in words:
@@ -266,14 +273,43 @@ class BayazanProEngine:
             for a_idx in range(1, s_info['ayas'] + 1):
                 full_ref, words = self.get_enriched_words(s_num, a_idx)
                 
-                # 3. Ayah Header Line
+                # 3. English "Ayah X:" label on separate line
+                p_ayah_num = doc.add_paragraph()
+                p_ayah_num.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+                run_ayah_label = p_ayah_num.add_run(f"Ayah {a_idx}:")
+                run_ayah_label.font.size = Pt(14)
+                run_ayah_label.font.color.rgb = RGBColor(100, 100, 100)
+                run_ayah_label.bold = True
+                
+                # 4. Ayah Text with Arabic-Indic number at the end
                 p_full = doc.add_paragraph()
                 p_full.alignment = WD_ALIGN_PARAGRAPH.RIGHT
                 p_full.paragraph_format.rtl = True
-                run_full = p_full.add_run(full_ref)
-                self.set_arabic_font(run_full, 20, color=(96, 96, 96))
+                
+                # Split the text and number for different font handling
+                # Extract text without the ayah number
+                ayah_text_only = full_ref.rsplit('﴿', 1)[0].strip()
+                arabic_num = to_arabic_numerals(a_idx)
+                
+                # Add ayah text with theme font
+                run_text = p_full.add_run(ayah_text_only + " ")
+                self.set_arabic_font(run_text, 20, color=(96, 96, 96))
+                
+                # Add ayah number with square brackets and Arabic-Indic numerals
+                # Using square brackets for reliable rendering across all fonts
+                run_num = p_full.add_run(f"[{arabic_num}]")
+                run_num.font.name = "Arial"
+                run_num.font.size = Pt(16)
+                run_num.font.bold = True
+                run_num.font.color.rgb = RGBColor(96, 96, 96)
+                # Set complex script font
+                r = run_num._element
+                rPr = r.get_or_add_rPr()
+                rFonts = OxmlElement('w:rFonts')
+                rFonts.set(qn('w:cs'), 'Arial')
+                rPr.append(rFonts)
 
-                # 4. Academic Analysis Table
+                # 5. Academic Analysis Table
                 table = doc.add_table(rows=1, cols=4)
                 table.style = 'Table Grid'
                 table.allow_autofit = False
