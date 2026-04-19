@@ -227,6 +227,7 @@ def create_doc(start_surah, end_surah, output_filepath):
         # Ayah text with Arabic-Indic number at the end
         p_ayah = doc.add_paragraph()
         p_ayah.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        p_ayah.paragraph_format.rtl = True  # Set right-to-left text direction
         p_ayah.paragraph_format.line_spacing = Pt(40)
         
         # Add ayah text
