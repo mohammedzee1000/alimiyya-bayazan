@@ -1,4 +1,70 @@
-# Release Notes - v1.0.0
+# Release Notes
+
+---
+
+## v1.0.1 - Ayat Number Display & RTL Text Fix
+
+**Release Date:** April 20, 2026
+
+### 🐛 Bug Fixes
+
+- **Fixed RTL Text Direction in Standard Mode** - Arabic text now properly flows right-to-left instead of displaying backwards. This was a critical bug affecting readability when the required Arabic font was not installed on the system.
+
+### ✨ Enhancements
+
+- **Improved Ayat Number Display**
+  - Ayat numbers now appear on a separate line above the verse text for better clarity
+  - Format: English label "Ayah X:" followed by the Arabic verse text
+  - Enhanced visual separation between verses
+
+- **Arabic-Indic Numerals Implementation**
+  - Ayat numbers now use traditional Arabic-Indic numerals (٠١٢٣٤٥٦٧٨٩)
+  - Square bracket format `[٣]` for reliable cross-platform rendering
+  - Maintains traditional Quranic styling while ensuring compatibility
+
+- **Font Optimization**
+  - Ayat numbers use Arial font (bold) for consistent numeral display
+  - Arabic text maintains theme-specific fonts for authentic styling
+  - Improved cross-platform font compatibility
+
+### 📝 Display Format
+
+**Before v1.0.1:**
+```
+[Arabic text with number at end] ﴿3﴾
+```
+
+**After v1.0.1:**
+```
+Ayah 3:
+[Arabic text] [٣]
+```
+
+### 🔧 Technical Changes
+
+- Added `paragraph_format.rtl = True` property in Standard mode for proper RTL text flow
+- Implemented `to_arabic_numerals()` helper function for numeral conversion
+- Split ayat text and numbers into separate runs with appropriate font handling
+- Enhanced font fallback behavior for better cross-platform support
+
+### 📦 Files Modified
+
+- `generate_bayazan.py` - Standard mode generator
+- `generate_bayazan_pro.py` - Pro academic mode generator
+
+### ⚠️ Important Notes
+
+- Users with v1.0.0 documents should regenerate their workbooks to get the RTL fix
+- Font installation is still required before opening documents for proper display
+- See `FONT_INSTALLATION.md` in the generated directory for font setup instructions
+
+### 🙏 Acknowledgments
+
+Thanks to the community members who reported the text direction issue and provided feedback on the ayat number display improvements.
+
+---
+
+## v1.0.0 - Initial Release
 
 **Release Date:** April 13, 2026
 
